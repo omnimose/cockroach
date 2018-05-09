@@ -780,17 +780,14 @@ var specs = []stmtSpec{
 	{
 		name:    "restore",
 		stmt:    "restore_stmt",
-		inline:  []string{"name_list", "opt_as_of_clause", "opt_with_options"},
-		match:   []*regexp.Regexp{regexp.MustCompile("'RESTORE'")},
-		exclude: []*regexp.Regexp{regexp.MustCompile("'RESTORE' 'DATABASE'")},
+		inline:  []string{"as_of_clause", "opt_with_options"},
 		replace: map[string]string{
-			"non_reserved_word_or_sconst":            "destination",
-			"'AS' 'OF' 'SYSTEM' 'TIME' a_expr_const": "",
+			"a_expr_const": "timestamp",
 			"string_or_placeholder_list":             "full_backup_location ( | incremental_backup_location ( ',' incremental_backup_location )*)",
-			"'WITH' 'OPTIONS'":                       "'WITH OPTIONS'",
+			"'WITH' 'OPTIONS' '(' kv_option_list ')'":         "",
 			"targets":                                "( ( 'TABLE' | ) table_pattern ( ( ',' table_pattern ) )* | 'DATABASE' database_name ( ( ',' database_name ) )* )",
 		},
-		unlink: []string{"destination", "timestamp", "full_backup_location", "incremental_backup_location"},
+		unlink: []string{"timestamp", "full_backup_location", "incremental_backup_location"},
 	},
 	{
 		name:   "revoke_privileges",
